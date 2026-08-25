@@ -1,0 +1,18 @@
+# 基础运行时
+pydantic>=2.0
+pyyaml>=6.0
+
+# 屏幕捕获 / 读屏（Windows）
+mss>=9.0
+
+# 图像处理
+pillow>=10.0
+
+# 可选：本地模型推理（按需安装）
+# torch>=2.1
+# transformers>=4.40
+# openai>=1.30          # 若走 OpenAI 兼容本地服务（如 llama.cpp / vLLM）
+
+# 语音输入（后续扩展）
+# sounddevice>=0.4
+# faster-whisper>=1.0

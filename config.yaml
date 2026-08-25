@@ -1,0 +1,24 @@
+# aura 运行时配置
+models:
+  llm:
+    backend: ollama
+    base_url: http://localhost:11434/v1
+    model: qwen2.5:7b
+    timeout: 60
+  # vision:              # 后续读屏升级 VLM 时启用
+  #   backend: ollama
+  #   model: qwen2.5-vl:7b
+
+sensors:
+  enabled:
+    - screen          # 后续可加 camera / audio
+  screen_interval: 2.0
+  camera_interval: 1.0
+
+agent:
+  loop_interval: 3.0
+  max_steps: 50
+  system_prompt: >
+    你是一个具备自主性的环境感知助手。
+    你会持续观察环境并思考，但并非每次都要对外回应。
+    只有当环境确实需要你时才表态，否则保持沉默。
