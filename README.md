@@ -8,9 +8,9 @@
 
 > 核心主张：**不输出 ≠ 不思考**。思考可以持续进行，但对环境的副作用（说话、动作）是可选的、可被抑制的。
 
-> 核心主张：**不输出 ≠ 不思考**。思考可以持续进行，但对环境的副作用（说话、动作）是可选的、可被抑制的。
+> **当前代码是 v0.1，v2 尚在设计阶段**。先读 [demo 能力边界与完成标准](docs/v2/demo-capability.md)，再读 [实施契约](docs/v2/demo.md)；[v2 文档入口](docs/v2/README.md) 区分长期目标与本次交付。
 
-> **v2 设计进行中**：加入决策模型、事件驱动感知和内心活动，见 [docs/v2](docs/v2/README.md)。
+v2 计划验证：在至少两类应用上，以本地感知和决策发现帮助机会，按需思考，等断点表达，采纳后给出具体建议。先做可回放骨架，再做真实闭环，最终达到可在本人电脑上试用的实验原型。动作执行、长期学习、全软件覆盖暂不属于这次 demo。
 
 ## 这是什么
 
@@ -27,7 +27,7 @@
 
 - ✅ 项目骨架与核心抽象
 - ✅ 最小「感知 → 思考 → 决策 → 行动/沉默」循环
-- ✅ **读屏**（screen）感知源（Windows OCR / 图像捕获）
+- ✅ 屏幕截图感知源；OCR 为可选的 `pytesseract` 路径，需另装引擎与语言包，默认依赖安装不保证可读正文
 - 🚧 后续：多视频源（摄像头等）扩展
 - 🚧 后续：语音输入
 - 🚧 后续：本地模型（本地 LLM / 视觉模型）接入
@@ -60,30 +60,34 @@ aura/
 └── scripts/              # 辅助脚本（感知采集、演示）
 ```
 
-## 快速开始
+## 快速开始（现有 v1 模拟示例）
 
-```bash
-# 1. 创建虚拟环境
-python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# macOS / Linux
-source .venv/bin/activate
+以下示例使用模拟感知和模拟模型，不需要密钥或真实模型，也不证明 v2 已实现。Windows PowerShell：
 
-# 2. 安装依赖
-pip install -r requirements.txt
-
-# 3. 运行示例（先跑通「思考 → 可沉默」的逻辑，不接真实摄像头）
-python examples/silent_agent_demo.py
+```powershell
+# 选择本机已安装且依赖兼容的 Python（示例为 3.10）
+py -3.10 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+.\.venv\Scripts\python.exe examples/silent_agent_demo.py
 ```
+
+macOS / Linux 使用 `python3 -m venv .venv` 创建环境，再用 `.venv/bin/python` 执行相同的安装和示例命令。v2 的回放命令、客户端和真实模型配置均为待实现内容，见实施契约。
 
 ## 运行测试
 
-`ash
-python -m pytest
-`
+```powershell
+.\.venv\Scripts\python.exe -m pytest
+```
 
 ## 文档
+
+- [v2 文档入口](docs/v2/README.md)
+- [demo 做到什么程度](docs/v2/demo-capability.md)
+- [demo 实施契约](docs/v2/demo.md)
+- [长期设计](docs/v2/design.md)
+- [调研与待核验线索](docs/v2/research.md)
+
+以下是 v1 历史设计，部分接口与路线已过时；v2 规划以以上文档为准。
 
 - [总体架构](docs/architecture.md)
 - [环境感知方案](docs/environment-perception.md)

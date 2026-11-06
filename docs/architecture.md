@@ -1,5 +1,7 @@
 # 总体架构（AURA）
 
+> v1 历史设计，部分接口已过时；v2 规划以 [v2 文档入口](v2/README.md) 和 [demo 交付标准](v2/demo-capability.md) 为准。本文不代表当前功能全部可用。
+
 > **AURA** = **A**utonomous **U**nderstanding & **R**eactive **A**wareness
 
 ## 1. 目标

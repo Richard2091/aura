@@ -2,6 +2,7 @@
 
 > 整理日期：2026-10-21（两轮调研）。本文记录 v2 设计所依据的模型、论文和开源项目，以及哪些结论**还没核实**。
 > 大部分资料来自厂商博客和二手报道，数字（价格、延迟、准确率）以官方文档为准，使用前要再确认。
+> 2026-11-05 修订：下文保留历史调研，不代表本次已复核。模型名称、参数、模态、许可、接口和价格先按阶段 0 的官方证据重新核验；未通过验证不应当成可用能力。demo 边界以 [demo-capability.md](demo-capability.md) 为准。
 
 ## 1. 决策模型
 
@@ -68,6 +69,23 @@
 | **Sleep-time compute**（Letta、伯克利，2025） | 让模型在空闲时预处理信息；二手资料报告同等准确率下测试时计算量减少约 2.5 倍（未核实原文） | 后台整理时增加"预想"（design 4.8） |
 | **键盘行为与情绪研究**（多篇，2016~2022） | 打字时长、停顿、删除等与情绪、压力有关，但效应小、个体差异大；个性化基准更可靠 | 犹豫、疲惫要与个人基准比较（design 4.7）；事件保存结构化数据（design 4.1.3） |
 
+### 2.4 其他会话中的产品线索与证据边界（2026-11-05）
+
+来源会话 `session-c825e7d2-9d74-4254-860e-bf31d164c105` 讨论了以下产品。**本次文档修订没有独立核实这些产品的发布、内部实现、许可或安全事件**，所以只保留机制线索，不能据此写“路线已获验证”“方向风险消除”或直接引入依赖。
+
+| 会话中的线索 | 值得单独验证的机制 | 对 AURA 的用途与限制 |
+|---|---|---|
+| DeepSeek Super-agent | Router–Worker、规则过滤后再由模型判断、任务恢复与超时监测 | 对照 [design.md §4.1.2](design.md#412-处理管线所有感知源共用) 的路由/去重/有界排队；demo 只需单机调度，不需要多 Agent |
+| OpenAI dot(s) | 持续任务、后台发现候选建议、在用户允许的信息范围工作 | 对照 §4.3 注意、§4.4 弃权与 §4.5.1 表达分档；不能因此把“自动生成目标”加入 demo |
+| Muse | 领域记忆、后台整理、建议筛选 | 对照 §4.6 记忆；demo 仍用手写小抄 + JSONL，不因报道改用数据库或夜间反思 |
+| Grok Bot | 事件唤醒、去重/合并、少量汇总、分级打扰 | 对照事件管线与表达时机；先做有界队列、过期和情境复查，不照搬服务端工作流基础设施 |
+
+会话还提到 Muse 权限失效、下载量、用户月成本，以及 Super-agent 的 MIT 许可、P95 和委派实验数字。这些均**未经本次核验**，不在本文当作已发生事实或选型依据。未来若需要引用，应找到官方原文/仓库 LICENSE、原始实验或安全报告，核对主体、日期和范围。模型审查只能作为辅助，不能替代程序权限和隐私硬边界。
+
+可直接落地的工程要求来自 AURA 自身需求：事件要有来源、隐私和有效期；暂停应阻止采集与旧结果回流；模型建议不等于授权；常驻资源和帮助质量必须测量。竞品类比只帮助列出假设。
+
+2026-11-05 的本机浅层 UIA/截图探测和其局限见 [demo-capability.md §7](demo-capability.md#7-本机探测能说明什么)。窗口标题/控件字数不是正文覆盖率，截图耗时不包含 OCR/推理，不能据一次探测改成持续截图。
+
 ## 3. 人脑机制与 AURA 的对应
 
 只借**功能**，不模仿神经元或脑区结构。有些理论还有争议，这里只作为设计灵感。
@@ -99,9 +117,15 @@
 9. Sleep-time compute 约 2.5 倍的数字（只看了二手资料）。
 10. Need Help? 论文中具体的时机条件和结果（只看了摘要）。
 11. 托盘图标和带按钮的 Windows 通知用哪个 Python 库。
-12. glm-5.3-flash 在复杂请求下的延迟和费用（2026-10-21 已在台式机调通：推理模型，简单请求约 4 秒）。
+12. glm-5.3-flash 在复杂请求下的延迟和费用（历史记录称 2026-10-21 简单请求约 4 秒；本次未复测，不作为性能保证）。
+13. 原计划决策模型的官方仓库、当前 LICENSE、权重版本、加载方式、四题接口与概率语义；本地不成立时的替代本地后端。
+14. 本地 OCR 的安装/语言支持、前台窗口截图的密码保护、多屏与 DPI、暂停钩子释放和旧任务取消。
+15. 数据源/小抄/派生摘要的隐私标签传播、云端请求拦截、日志保留期与删除竞态；按 [demo.md](demo.md) 的故障测试确认。
+16. §2.4 的产品主体、官方机制、实验/事故原始材料；没有原始证据就保持线索状态，不补未经证实的数字。
 
 ## 5. 来源
+
+以下链接部分来自历史调研，列出不代表本次验证可访问或内容无误。§2.4 的待核验入口：[Super-agent 二手报道](https://www.36kr.com/p/4052484771681158)、[会话使用的产品综述](https://www.cyzone.cn/article/849322.html)、[OpenAI dots 线索](https://openai.com/zh-Hans-CN/index/introducing-dots/)。这些线索不能替代官方实现、许可或原始安全报告。
 
 决策模型
 - Jev：[Runware](https://runware.ai/models/typesafe-jev)、[eesel 价格](https://www.eesel.ai/blog/typesafe-jev-pricing)、[flaviocopes 价格](https://flaviocopes.com/jev-pricing/)、[cloudprice](https://cloudprice.net/models/typesafe-jev)、[Jev 1.14 发布（remio）](https://www.remio.ai/post/jev-1-14-0-release-expands-what-jev-can-see-but-typesafe-wont-call-it-production)、[Jev 1.14 图片输入（SmartScope）](https://smartscope.blog/en/blog/jev-image-input-guide-asset-handling-choice-box-2026/)、[Jev 1.14 Box（RuntimeWire）](https://runtimewire.com/article/typesafe-jev-1-14-danger-zone-experiments)
